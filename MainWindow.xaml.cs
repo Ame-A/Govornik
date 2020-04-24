@@ -15,87 +15,113 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Zadaci
+namespace Zadaci_5_ispravka
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        ObservableCollection <Slusaoc> Slusaoci = new ObservableCollection<Slusaoc>();
+        ObservableCollection<Slusaoc> Slusaoci = new ObservableCollection<Slusaoc>();
+        public Govornik Govornik1 = new Govornik();
+        public diktafonC D1 = new diktafonC();
+        private string govor1;
 
-        Govornik G1 = new Govornik();
-        Govornik G2 = new Govornik();
-
-        private string txt1; 
-        public string Txt1
+        public string Govor1
         {
-            get => txt1;
+            get => govor1;
 
             set
             {
-                txt1 = value;
-                G1.Oglasi(G1,txt1);
+                govor1 = value;
+                Govornik1.govornik(Govor1, "Govornik 1");
             }
         }
+        public Govornik Govornik2 = new Govornik();
 
-        private string txt2;
-        public string Txt2
+        private string govor2;
+
+        public string Govor2
         {
-            get => txt2;
+            get => govor2;
 
             set
             {
-                txt2 = value;
-                G2.Oglasi(G2, txt2);
+                govor2 = value;
+                Govornik2.govornik(Govor2, "Govornik 2");
             }
         }
+
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
             DataG.ItemsSource = Slusaoci;
-            Slusaoci.Add(new Slusaoc("Test"));
+            DataContext = this;
         }
-        private void SlusajG1(object sender, RoutedEventArgs e)
+
+        private void Dodaj_slusaoca(object sender, RoutedEventArgs e)
         {
-            ToggleButton tb = sender as ToggleButton;
-            if (tb.IsChecked == true) 
+            Dodaj_Slusaoca s = new Dodaj_Slusaoca();
+            s.Owner = this;
+            if(s.ShowDialog() == true)
             {
-                G1.Govor += (tb.DataContext as Slusaoc).PosZapamtio;
+                Slusaoci.Add(s.DataContext as Slusaoc);
+            }
+        }
+        private void Izbaci(object sender, RoutedEventArgs e)
+        {
+            Slusaoc Koga_izbacuje = ((sender as Button).DataContext as Slusaoc);
+            if (Slusaoci.Remove(Koga_izbacuje))
+            {
+                MessageBox.Show($"Izbacili ste slusaoca pod imenom {Koga_izbacuje.Ime}");
+                return;
+            }
+            MessageBox.Show("Doslo je do greske!");
+        }
+
+
+        private void Slusaj(object sender, RoutedEventArgs e)
+        {
+            ToggleButton tb = (ToggleButton)sender;
+            if (tb.Name == "Govornik1" && tb.IsChecked == true)
+            {
+                Govornik1.GovornikEvent += (tb.DataContext as Slusaoc).Dolazna_Informacija;
+                return;
+            } else if (tb.Name == "Govornik1" && tb.IsChecked == false)
+            {
+                Govornik1.GovornikEvent -= (tb.DataContext as Slusaoc).Dolazna_Informacija;
+                return;
+            }
+            if (tb.Name == "Govornik2" && tb.IsChecked == true)
+            {
+                Govornik2.GovornikEvent += (tb.DataContext as Slusaoc).Dolazna_Informacija;
+                return;
+            } else if (tb.Name == "Govornik2" && tb.IsChecked == false)
+            {
+                Govornik1.GovornikEvent -= (tb.DataContext as Slusaoc).Dolazna_Informacija;
+                return;
+            }
+        }
+        private void Snimi(object sender, RoutedEventArgs e)
+        {
+            ToggleButton tb = ((ToggleButton)sender);
+            if ((bool)tb.IsChecked)
+            {
+                Govornik1.GovornikEvent += D1.Snimaj;
+                Govornik2.GovornikEvent += D1.Snimaj;
+                tb.Content = "Diktafon snima";
             }
             else
             {
-                G1.Govor -= (tb.DataContext as Slusaoc).PosZapamtio;
+                Govornik1.GovornikEvent -= D1.Snimaj;
+                Govornik2.GovornikEvent -= D1.Snimaj;
+                tb.Content = "Ukljuci diktafon";
             }
         }
 
-        private void SlusajG2(object sender, RoutedEventArgs e)
+        private void Snimato(object sender, RoutedEventArgs e)
         {
-            ToggleButton tb = sender as ToggleButton;
-            if (tb.IsChecked == true)
-            {
-                G2.Govor += (tb.DataContext as Slusaoc).PosZapamtio;
-            }
-            else
-            {
-                G2.Govor -= (tb.DataContext as Slusaoc).PosZapamtio;
-            }
+            Diktafon df = new Diktafon(D1.lista);
+            df.Owner = this;
+            df.Show();
         }
-
-        private void Izbrisi(object sender, RoutedEventArgs e)
-        {
-            string ime = ((sender as Button).DataContext as Slusaoc).Ime;
-            if (Slusaoci.Remove((sender as Button).DataContext as Slusaoc))
-            {
-                MessageBox.Show($"Uspesno ste izbacili slusaoca {ime}");
-            }
-            else
-            {
-                MessageBox.Show("Greska!");
-            }
-        }
-
     }
 }

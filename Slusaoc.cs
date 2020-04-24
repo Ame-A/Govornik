@@ -2,35 +2,38 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Zadaci
+namespace Zadaci_5_ispravka
 {
-    class Slusaoc : INotifyPropertyChanged
+    public class Slusaoc : INotifyPropertyChanged
     {
         public string Ime { get; set; }
-        public bool Selektovan { get; set; }
-        private string zapamtio;
-        public string Zapamtio 
-        {
-            get => zapamtio;
+        private string infromacija;
+        public string Informacija 
+        { 
+            get => infromacija;
             set
             {
-                zapamtio = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Zapamtio"));
-            }
-        } 
+                infromacija = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Informacija"));
+            }      
+        }
+        public bool sel1 { get; set; }
+        public bool sel2 { get; set; }
 
-        public Slusaoc(string i)
+        public Slusaoc (string ime)
         {
-            Ime = i;    
+            Ime = ime;
+        }
+        public Slusaoc() { }
+        public void Dolazna_Informacija(object Posiljaoc, GovorArgs args)
+        {
+            Informacija = args.Govor;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void PosZapamtio(object kosalje, Govornik g, string x)
-        {
-            Zapamtio = g.Informacija;
-        }
     }
 }

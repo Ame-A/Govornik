@@ -1,44 +1,52 @@
-﻿<Window x:Class="Zadaci.MainWindow"
+﻿<Window x:Class="Zadaci_5_ispravka.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Zadaci"
+        xmlns:local="clr-namespace:Zadaci_5_ispravka"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" FontSize="17">
     <DockPanel>
+        
         <UniformGrid Rows="1" Columns="4" DockPanel.Dock="Top">
-            <Label Content="Govornik 1 :"/>
-            <TextBox Text="{Binding Txt1, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="Govornik 2 :"/>
-            <TextBox Text="{Binding Txt2, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="Govornik 1"/>
+            <TextBox Text="{Binding Govor1, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="Govornik 2"/>
+            <TextBox Text="{Binding Govor2, UpdateSourceTrigger=PropertyChanged}"/>
         </UniformGrid>
-        <DataGrid DockPanel.Dock="Bottom" Name="DataG" IsReadOnly="True" AutoGenerateColumns="False">
+
+        <UniformGrid Rows="1" Columns="3" DockPanel.Dock="Bottom">
+            <Button Content="Prikazi snimato" Click="Snimato"/>
+            <ToggleButton Content="Ukljuci diktafon" IsThreeState="False" Click="Snimi"/>
+            <Button Content="Dodaj slusaoca" Click="Dodaj_slusaoca"/>
+        </UniformGrid>
+        <DataGrid Name="DataG" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Ime slusaoca" Binding="{Binding Ime}"/>
-                <DataGridTextColumn Header="Zapamtio" Binding="{Binding Zapamtio}"/>
+                <DataGridTextColumn Header="Ime" Binding="{Binding Ime}"/>
+                <DataGridTextColumn Header="Zapamtio" Binding="{Binding Informacija}"/>
                 <DataGridTemplateColumn Header="Govornik 1">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ToggleButton Content="Slusaj" IsThreeState="False" IsChecked="{Binding Selektovan}" Click="SlusajG1"/>
+                            <ToggleButton Content="Slusaj" Click="Slusaj" Name="Govornik1" IsThreeState="False" IsChecked="{Binding sel1, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Govornik 2">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ToggleButton Content="Slusaj" IsThreeState="False" IsChecked="{Binding Selektovan}" Click="SlusajG2"/>
+                            <ToggleButton Content="Slusaj" Click="Slusaj" Name="Govornik2" IsThreeState="False" IsChecked="{Binding sel2, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Izbaci">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="X" Click="Izbrisi"/>
+                            <Button Content="X" Click="Izbaci"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>
+
 </Window>
